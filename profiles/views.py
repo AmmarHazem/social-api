@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 # from rest_framework import status
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
@@ -12,6 +12,8 @@ from posts.serializers import PostSerializer
 
 
 class FollowUnfollowView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, format = None):
         follow_user = User.objects.get(username = request.data.get('user'))
         if request.data['action'] == 'follow':
@@ -23,6 +25,7 @@ class FollowUnfollowView(APIView):
 
 class TimelineView(generics.ListAPIView):
     serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return self.request.user.profile.get_timeline()
