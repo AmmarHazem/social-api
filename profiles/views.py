@@ -32,7 +32,7 @@ class ProfileListView(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
 
-class UserCraeteView(generics.CreateAPIView):
+class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
 
