@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt import views as jwt_views
 
 from posts.views import root_view
-from profiles.views import UserCreateView, TimelineViewm, UserInforView
+from profiles.views import UserCreateView, TimelineView, UserInforView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
