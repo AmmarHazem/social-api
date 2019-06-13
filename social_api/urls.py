@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt import views as jwt_views
 
 from posts.views import root_view
-from profiles.views import UserCreateView, TimelineView
+from profiles.views import UserCreateView, TimelineViewm, UserInforView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', UserCreateView.as_view(), name = 'register'),
     path('api/timeline/', TimelineView.as_view(), name = 'timeline'),
+    path('api/user-info/', UserInforView.as_view(), name = 'user-info'),
     path('', root_view.as_view(), name = 'root'),
 ]
 

@@ -23,6 +23,14 @@ class FollowUnfollowView(APIView):
         return Response({'success' : True}, status = 200)
 
 
+class UserInforView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format = None):
+        info = {'username' : request.user.username}
+        return Response(info)
+
+
 class TimelineView(generics.ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (IsAuthenticated,)
