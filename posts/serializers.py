@@ -16,7 +16,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('url', 'title', 'content', 'user', 'published', 'created', 'comments', 'likes')
+        fields = ('url', 'title', 'slug', 'content', 'user', 'published', 'created', 'comments', 'likes')
         extra_kwargs = {
             'url' : {
                 'view_name' : 'posts:detail',
