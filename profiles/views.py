@@ -11,6 +11,15 @@ from .serializers import ProfileSerializer, ProfileDetailSerializer, UserCreateS
 from posts.serializers import PostSerializer
 
 
+class GetProfileView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format = None):
+        ser_profile = ProfileDetailSerializer(request.user.profile, context = {'request' : request})
+        print(ser_profile.data)
+        return Response(ser_profile.data)
+
+
 class FollowUnfollowView(APIView):
     permission_classes = (IsAuthenticated,)
 
