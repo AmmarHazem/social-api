@@ -4,7 +4,7 @@ from django.utils.text import slugify
 
 
 class Post(models.Model):
-    title = models.CharField(max_length = 300, blank = True)
+    title = models.CharField(max_length = 300, unique = True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'posts', on_delete = models.CASCADE)
     content = models.TextField()
     published = models.BooleanField(default = True)

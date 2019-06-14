@@ -24,11 +24,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'v)*j^38pbtdf2uaw=yuj6ky)b(^jo_8gpr(l01#z759wm@p7w@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# ALLOWED_HOSTS = ['mysocialapi.herokuapp.com']
-# DEBUG = False
+ALLOWED_HOSTS = ['mysocialapi.herokuapp.com']
+DEBUG = False
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
 
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+# DEBUG = True
+# ALLOWED_HOSTS = ['*']
 
 
 # Application definition
