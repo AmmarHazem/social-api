@@ -18,7 +18,6 @@ class GetProfileView(APIView):
 
     def get(self, request, format = None):
         ser_profile = ProfileDetailSerializer(request.user.profile, context = {'request' : request})
-        print(ser_profile.data)
         return Response(ser_profile.data)
 
 
