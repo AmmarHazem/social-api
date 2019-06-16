@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse_lazy
 from datetime import datetime
 
 from posts.models import Post
@@ -31,3 +32,6 @@ class Profile(models.Model):
         for u in self.following.all():
             qs = qs | u.posts.all()
         return qs
+
+    def get_absolute_url(self):
+        return reverse_lazy('profiles:user-detail', kwargs = {'username' : self.__str__()})

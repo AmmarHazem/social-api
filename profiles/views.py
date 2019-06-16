@@ -2,6 +2,8 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 # from rest_framework import status
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
@@ -32,14 +34,6 @@ class FollowUnfollowView(APIView):
         return Response({'success' : True}, status = 200)
 
 
-class UserInforView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, format = None):
-        info = {'username' : request.user.username}
-        return Response(info)
-
-
 class TimelineView(generics.ListAPIView):
     serializer_class = PostSerializer
     permission_classes = (IsAuthenticated,)
@@ -60,9 +54,20 @@ class UserCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         valid_data = serializer.validated_data
-        User.objects.create_user(valid_data['username'], valid_data.get('email', ''), valid_data['password1'])
-        serializer.data['password1'] = ''
-        serializer.data['password2'] = ''
+        return User.objects.create_user(valid_data['username'], valid_data.get('email', ''), valid_data['password1'])
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception = True)
+        user = self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        token = Token.objects.get(user = user)
+        data = {
+            'success' : True,
+            'username' : user.username,
+            'token' : str(token),
+            }
+        return Response(data, headers = headers, status = status.HTTP_201_CREATED)
 
 
 class UserRetrieveView(generics.RetrieveAPIView):

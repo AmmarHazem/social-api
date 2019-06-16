@@ -2,7 +2,8 @@ from rest_framework.reverse import reverse
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from datetime import datetime
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework import status
 
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from .models import Post, Comment, Like
@@ -12,6 +13,7 @@ from .permissions import IsOwnerOrReadOnly
 class PostsListView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.filter(published = True)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user = self.request.user)
@@ -33,21 +35,36 @@ class CommentDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class CommentCreate(generics.CreateAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
+    permission_classes = (IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        if self.request.user.is_authenticated:
-            return serializer.save(user = self.request.user, created = datetime.now())
-        return serializer.save(created = datetime.now())
+    def create(self, request, *args, **kwargs):
+        data = {
+            'user' : request.user.profile.get_absolute_url(),
+            'content' : request.data.get('content'),
+            'post' : request.data.get('post'),
+        }
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class CreateLikeView(generics.CreateAPIView):
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
+    permission_classes = (IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        if self.request.user.is_authenticated:
-            return serializer.save(user = self.request.user, created = datetime.now())
-        return serializer.save(created = datetime.now())
+    def create(self, request, *args, **kwargs):
+        data = {
+            'post' : request.data.get('post'),
+            'user' : request.user.profile.get_absolute_url(),
+        }
+        serializer = self.get_serializer(data = data)
+        serializer.is_valid(raise_exception = True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status = status.HTTP_201_CREATED, headers = headers)
 
 
 class LikeRDView(generics.RetrieveDestroyAPIView):

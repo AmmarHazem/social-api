@@ -32,9 +32,11 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         source = 'user.followers',
     )
 
+    username = serializers.CharField(max_length = 200, source = 'user.username')
+
     class Meta:
         model = Profile
-        fields = ('user', 'bio', 'following', 'followers', 'created',)
+        fields = ('user', 'username', 'bio', 'following', 'followers', 'created',)
         extra_kwargs = {
             'following' : {
                 'view_name' : 'profiles:user-detail',
