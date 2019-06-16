@@ -174,5 +174,3 @@ REST_FRAMEWORK = {
 #     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 # }
 
-
-# django_heroku.settings(locals())
