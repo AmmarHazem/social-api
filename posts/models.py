@@ -40,4 +40,4 @@ class Like(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return f'Comment {self.id}'
+        return f'{self.user.username}'

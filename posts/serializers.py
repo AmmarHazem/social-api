@@ -11,7 +11,7 @@ user_kwargs = {
 class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     comments = serializers.HyperlinkedRelatedField(view_name = 'posts:comment', many = True, read_only = True)
-    likes = serializers.HyperlinkedRelatedField(view_name = 'posts:like', many = True, read_only = True)
+    likes = serializers.StringRelatedField(many = True, read_only = True)
     # user = serializers.ReadOnlyField(source = 'user.username')
 
     class Meta:
@@ -43,9 +43,10 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LikeSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.StringRelatedField(many = True)
     class Meta:
         model = Like
-        fields = ('post', 'user', 'created')
+        fields = ('post',)
         extra_kwargs = {
             'post' : {
                 'view_name' : 'posts:detail',
