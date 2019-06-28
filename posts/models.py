@@ -14,6 +14,9 @@ class Post(models.Model):
     class Meta:
         ordering = ('-created', 'title')
 
+    def get_user_likes(self):
+        return [like.user.username for like in self.likes.all()]
+
     def __str__(self):
         return self.title
 

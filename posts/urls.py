@@ -9,6 +9,6 @@ urlpatterns = [
     path('post-comment/', views.CommentCreate.as_view(), name = 'create-comment'),
     path('<slug:slug>', views.PostDetailUpdateDestroyView.as_view(), name = 'detail'),
     path('comment/<int:pk>', views.CommentDetailUpdateDestroyView.as_view(), name = 'comment'),
-    path('like/<int:pk>', views.LikeRDView.as_view(), name = 'like'),
-    path('like/', views.CreateLikeView.as_view(), name = 'create-like'),
+    re_path(r'^like/$', views.LikeUnlikeView.as_view(), name = 'like-unlike'),
+    path('like/<int:pk>', views.LikeRetrieveView.as_view(), name = 'like'),
 ]

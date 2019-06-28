@@ -28,8 +28,6 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
-    # created = serializers.DateTimeField(auto_now_add = True, required = False)
-
     class Meta:
         model = Comment
         fields = ('content', 'post', 'user', 'created')
@@ -43,14 +41,16 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LikeSerializer(serializers.HyperlinkedModelSerializer):
-    user = serializers.StringRelatedField(many = True)
+
+    user = serializers.StringRelatedField()
+    # post = serializers.HyperlinkedRelatedField(view_name = 'posts:detail', lookup_field = 'slug', read_only = True)
+
     class Meta:
         model = Like
-        fields = ('post',)
+        fields = ('post', 'user')
         extra_kwargs = {
             'post' : {
                 'view_name' : 'posts:detail',
                 'lookup_field' : 'slug',
             },
-            'user' : user_kwargs,
         }

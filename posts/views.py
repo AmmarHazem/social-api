@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from .models import Post, Comment, Like
@@ -50,24 +51,43 @@ class CommentCreate(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class CreateLikeView(generics.CreateAPIView):
+class LikeUnlikeView(APIView):
     serializer_class = LikeSerializer
-    queryset = Like.objects.all()
     permission_classes = (IsAuthenticated,)
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request, format = None):
+        print('\ncreate like view\n')
         data = {
             'post' : request.data.get('post'),
             'user' : request.user.profile.get_absolute_url(),
         }
-        serializer = self.get_serializer(data = data)
+        serializer = self.serializer_class(data = data)
         serializer.is_valid(raise_exception = True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status = status.HTTP_201_CREATED, headers = headers)
+        post_slug = data.get('post')[44:]
+        post = get_object_or_404(Post, slug = post_slug)
+        data = {}
+        if request.user.username in post.get_user_likes():
+            post.likes.get(user = request.user).delete()
+            data['action'] = 'unlike'
+        else:
+            Like.objects.create(user = request.user, post = post)
+            data['action'] = 'like'
+        data['success'] = True
+        return Response(data = data)
+
+    # def create(self, request, *args, **kwargs):
+    #     data = {
+    #         'post' : request.data.get('post'),
+    #         'user' : request.user.profile.get_absolute_url(),
+    #     }
+    #     serializer = self.get_serializer(data = data)
+    #     serializer.is_valid(raise_exception = True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status = status.HTTP_201_CREATED, headers = headers)
 
 
-class LikeRDView(generics.RetrieveDestroyAPIView):
+class LikeRetrieveView(generics.RetrieveAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     permission_classes = (IsOwnerOrReadOnly,)
