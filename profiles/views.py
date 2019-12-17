@@ -7,10 +7,29 @@ from rest_framework.authtoken.models import Token
 # from rest_framework import status
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from knox.models import AuthToken
 
 from .models import Profile
-from .serializers import ProfileSerializer, ProfileDetailSerializer, UserCreateSerializer
+from .serializers import ProfileSerializer, ProfileDetailSerializer, UserCreateSerializer, LoginSerializer
 from posts.serializers import PostSerializer
+
+
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+    permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception = True)
+        user = serializer.validated_data
+        if isinstance(user, User):
+            return Response({
+                'user': ProfileSerializer(user.profile, context = self.get_serializer_context()).data,
+                'token': AuthToken.objects.create(user)[1],
+            })
+        return Response({
+            'detail' : 'Incorrect username or password',
+            'status' : 400,
+        }, status = status.HTTP_400_BAD_REQUEST)
 
 
 class GetProfileView(APIView):
@@ -60,11 +79,10 @@ class UserCreateView(generics.CreateAPIView):
         serializer.is_valid(raise_exception = True)
         user = self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        token = Token.objects.get(user = user)
+        token = AuthToken.objects.create(user)[1]
         data = {
-            'success' : True,
-            'username' : user.username,
-            'token' : str(token),
+            'user' : ProfileSerializer(user.profile, context = self.get_serializer_context()).data,
+            'token' : token,
             }
         return Response(data, headers = headers, status = status.HTTP_201_CREATED)
 
