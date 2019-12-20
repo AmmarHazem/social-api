@@ -5,6 +5,7 @@ AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_FILE_EXPIRE = 200
 AWS_PRELOAD_METADATA = True
 AWS_QUERYSTRING_AUTH = True
+AWS_DEFAULT_ACL = None
 
 DEFAULT_FILE_STORAGE = 'social_api.aws.utils.MediaRootS3BotoStorage'
 STATICFILES_STORAGE = 'social_api.aws.utils.StaticRootS3BotoStorage'
