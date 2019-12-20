@@ -12,7 +12,7 @@ def images_path(instance, filename):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
     username = models.CharField(max_length = 200, editable = False, default = '')
-    # image = models.ImageField(images_path)
+    image = models.ImageField(images_path, null = True, blank = True)
     bio = models.TextField(blank = True)
     following = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name = 'followers')
     created = models.DateTimeField(auto_now_add = True)

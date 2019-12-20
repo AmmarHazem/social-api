@@ -50,7 +50,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'bio', 'following', 'followers', 'created',)
+        fields = ('user', 'username', 'image', 'bio', 'following', 'followers', 'created',)
         extra_kwargs = {
             'following' : {
                 'view_name' : 'profiles:user-detail',
@@ -83,7 +83,7 @@ class ProfileDetailSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'created', 'following', 'followers', 'posts',)
+        fields = ('username', 'bio', 'image', 'created', 'following', 'followers', 'posts',)
         extra_kwargs = {
             'following' : {
                 'view_name' : 'profiles:user-detail',
