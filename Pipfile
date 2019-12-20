@@ -28,6 +28,9 @@ typed-ast = "==1.4.0"
 wrapt = "==1.11.1"
 django-rest-knox = "*"
 pillow = "*"
+boto3 = "*"
+django-storages = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.6"
