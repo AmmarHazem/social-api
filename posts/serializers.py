@@ -12,7 +12,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     comments = serializers.HyperlinkedRelatedField(view_name = 'posts:comment', many = True, read_only = True)
     likes = serializers.StringRelatedField(many = True, read_only = True)
-    # user = serializers.ReadOnlyField(source = 'user.username')
+    user = serializers.HyperlinkedRelatedField(read_only = True, **user_kwargs)
 
     class Meta:
         model = Post
