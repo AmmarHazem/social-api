@@ -38,17 +38,20 @@ class CommentCreate(generics.CreateAPIView):
     queryset = Comment.objects.all()
     permission_classes = (IsAuthenticated,)
 
-    def create(self, request, *args, **kwargs):
-        data = {
-            'user' : request.user.profile.get_absolute_url(),
-            'content' : request.data.get('content'),
-            'post' : request.data.get('post'),
-        }
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # def create(self, request, *args, **kwargs):
+    #     data = {
+    #         'user' : request.user.profile.get_absolute_url(),
+    #         'content' : request.data.get('content'),
+    #         'post' : request.data.get('post'),
+    #     }
+    #     serializer = self.get_serializer(data=data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(user = self.request.user)
 
 
 class LikeUnlikeView(APIView):

@@ -28,10 +28,15 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
+    user = serializers.HyperlinkedRelatedField(read_only = True, view_name = 'profiles:user-detail', lookup_field = 'username',)
+
     class Meta:
         model = Comment
-        fields = ('content', 'post', 'user', 'created')
+        fields = ('url', 'content', 'post', 'user', 'created')
         extra_kwargs = {
+            'url': {
+                'view_name' : 'posts:comment',
+            },
             'post' : {
                 'view_name' : 'posts:detail',
                 'lookup_field' : 'slug',
