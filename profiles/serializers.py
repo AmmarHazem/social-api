@@ -46,11 +46,11 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         source = 'user.followers',
     )
 
-    username = serializers.CharField(max_length = 200, source = 'user.username')
+    username = serializers.CharField(max_length = 200, source = 'user.username', read_only = True)
 
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'image', 'bio', 'following', 'followers', 'created',)
+        fields = ('user', 'name', 'username', 'image', 'bio', 'following', 'followers', 'created',)
         extra_kwargs = {
             'following' : {
                 'view_name' : 'profiles:user-detail',
@@ -59,6 +59,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
             'user' : {
                 'view_name' : 'profiles:user-detail',
                 'lookup_field' : 'username',
+                'read_only': True,
             },
         }
 

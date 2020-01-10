@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from knox.models import AuthToken
 
 from .models import Profile
+from .permissions import IsOwnerOrReadOnly
 from .serializers import ProfileSerializer, ProfileDetailSerializer, UserCreateSerializer, LoginSerializer
 from posts.serializers import PostSerializer
 
@@ -87,7 +88,11 @@ class UserCreateView(generics.CreateAPIView):
         return Response(data, headers = headers, status = status.HTTP_201_CREATED)
 
 
-class UserRetrieveView(generics.RetrieveAPIView):
+class UserRetrieveView(generics.RetrieveUpdateAPIView):
     lookup_field = 'username'
     queryset = Profile.objects.all()
     serializer_class = ProfileDetailSerializer
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile
