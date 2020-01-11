@@ -11,7 +11,7 @@ from knox.models import AuthToken
 
 from .models import Profile
 from .permissions import IsOwnerOrReadOnly
-from .serializers import ProfileSerializer, ProfileDetailSerializer, UserCreateSerializer, LoginSerializer, ProfileImageSerializer
+from .serializers import ProfileSerializer, ProfileDetailSerializer, UserCreateSerializer, LoginSerializer
 from posts.serializers import PostSerializer
 
 
