@@ -91,9 +91,3 @@ class ProfileDetailSerializer(serializers.HyperlinkedModelSerializer):
                 'lookup_field' : 'username',
             },
         }
-
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('username',)
