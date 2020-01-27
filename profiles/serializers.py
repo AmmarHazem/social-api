@@ -74,6 +74,14 @@ class ProfileDetailSerializer(serializers.HyperlinkedModelSerializer):
         source = 'user.followers',
     )
 
+    following = serializers.HyperlinkedRelatedField(
+        read_only = True,
+        view_name = 'profiles:user-detail',
+        lookup_field = 'username',
+        many = True,
+        # source = 'user.followers',
+    )
+
     posts = serializers.HyperlinkedRelatedField(
         read_only = True,
         view_name = 'posts:detail',
@@ -84,7 +92,7 @@ class ProfileDetailSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'image', 'created', 'following', 'followers', 'posts',)
+        fields = ('username', 'name', 'bio', 'image', 'created', 'following', 'followers', 'posts',)
         extra_kwargs = {
             'following' : {
                 'view_name' : 'profiles:user-detail',

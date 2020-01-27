@@ -88,7 +88,7 @@ class UserCreateView(generics.CreateAPIView):
         return Response(data, headers = headers, status = status.HTTP_201_CREATED)
 
 
-class UserRetrieveView(generics.RetrieveUpdateAPIView):
+class UserRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     lookup_field = 'username'
     queryset = Profile.objects.all()
     serializer_class = ProfileDetailSerializer
